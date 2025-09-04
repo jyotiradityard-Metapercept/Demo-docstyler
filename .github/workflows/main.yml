@@ -1,18 +1,18 @@
-name: OWASP Dependency Check (Node.js)
+name: Dependency Check
 
 on:
   push:
     branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
-  workflow_dispatch:
+  workflow_dispatch: # allows manual run from Actions tab
 
 jobs:
   dependency-check:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout Repository
+      - name: Checkout code
         uses: actions/checkout@v4
 
       - name: Set up Node.js
@@ -20,41 +20,29 @@ jobs:
         with:
           node-version: '18'
 
-      - name: Install dependencies
-        run: npm install
-
       - name: Set up Java
         uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: '17'
 
-      - name: Cache OWASP data
-        uses: actions/cache@v4
-        with:
-          path: ~/.dependency-check
-          key: ${{ runner.os }}-dependency-check
-
-      - name: Download Dependency-Check
+      - name: Download OWASP Dependency Check
         run: |
-          wget https://github.com/jeremylong/DependencyCheck/releases/download/v10.0.3/dependency-check-10.0.3-release.zip
-          unzip dependency-check-10.0.3-release.zip -d $HOME/dependency-check
-          echo "$HOME/dependency-check/dependency-check/bin" >> $GITHUB_PATH
+          curl -L https://github.com/jeremylong/DependencyCheck/releases/download/v9.0.9/dependency-check-9.0.9-release.zip -o dependency-check.zip
+          unzip dependency-check.zip -d dependency-check
+          chmod +x dependency-check/bin/dependency-check.sh
 
-      - name: Run OWASP Dependency-Check
-        env:
-          NVD_API_KEY: ${{ secrets.NVD_API_KEY }}
+      - name: Run Dependency Check
         run: |
-          dependency-check.sh \
-            --project "Node-App" \
-            --scan ./ \
-            --format "JSON" \
-            --out ./dependency-check-report \
-            --nvdApiKey $NVD_API_KEY \
-            --enableExperimental
+          ./dependency-check/bin/dependency-check.sh \
+            --project "MyApp" \
+            --scan . \
+            --format "HTML" \
+            --out reports/ \
+            --nvdApiKey ${{ secrets.NVD_API_KEY }}
 
-      - name: Upload Dependency-Check Reports
+      - name: Upload Dependency Check Report
         uses: actions/upload-artifact@v4
         with:
           name: dependency-check-report
-          path: dependency-check-report
+          path: reports/
