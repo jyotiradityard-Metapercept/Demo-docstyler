@@ -5,7 +5,7 @@ on:
     branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
-  workflow_dispatch: # allows manual run from Actions tab
+  workflow_dispatch:
 
 jobs:
   dependency-check:
@@ -14,11 +14,6 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '18'
 
       - name: Set up Java
         uses: actions/setup-java@v4
@@ -32,17 +27,30 @@ jobs:
           unzip dependency-check.zip -d dependency-check
           chmod +x dependency-check/bin/dependency-check.sh
 
-      - name: Run Dependency Check
+      - name: Debug NVD API Key
+        run: |
+          if [ -z "${{ secrets.NVD_API_KEY }}" ]; then
+            echo "NVD_API_KEY is missing or empty!"
+            exit 1
+          else
+            echo "NVD_API_KEY is set (hidden)"
+          fi
+
+      - name: Run Dependency Check (with retries)
         env:
           NVD_API_KEY: ${{ secrets.NVD_API_KEY }}
         run: |
-          ./dependency-check/bin/dependency-check.sh \
-            --project "MyApp" \
-            --scan . \
-            --format "HTML" \
-            --out reports/ \
-            --nvdApiKey "$NVD_API_KEY" \
-            --nvdApiDelay 20000
+          for i in 1 2 3; do
+            echo "Attempt $i"
+            ./dependency-check/bin/dependency-check.sh \
+              --project "MyApp" \
+              --scan . \
+              --format "HTML" \
+              --out reports/ \
+              --nvdApiKey "$NVD_API_KEY" \
+              --nvdApiDelay 20000 \
+              --cveValidForHours 720 && break || sleep 30
+          done
 
       - name: Upload Dependency Check Report
         uses: actions/upload-artifact@v4
