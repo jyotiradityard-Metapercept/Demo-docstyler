@@ -39,7 +39,7 @@ jobs:
             --scan . \
             --format "HTML" \
             --out reports/ \
-            --nvdApiKey ${{ secrets.NVD_API_KEY }}
+            --nvdApiKey ${{ secrets.NVD_API_KEY }} \
             --nvdApiDelay 15000
 
       - name: Upload Dependency Check Report
