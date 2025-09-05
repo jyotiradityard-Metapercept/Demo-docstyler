@@ -49,23 +49,16 @@ jobs:
                -H "apiKey: 9d415b21-6410-464a-89a8-42ab22731476" \
                "https://services.nvd.nist.gov/rest/json/cves/2.0?cpeName=cpe:2.3:o:microsoft:windows_10:1607:*:*:*:*:*:*:*" | jq .
 
-      - name: Run Dependency Check (try API, fallback to noupdate)
-        run: |
-          $HOME/dependency-check/bin/dependency-check.sh \
-            --project "${{ github.event.repository.name }}" \
-            --scan . \
-            --format "HTML" \
-            --out reports/ \
-            --nvdApiKey 9d415b21-6410-464a-89a8-42ab22731476 \
-            --nvdApiDelay 6000 \
-            --update
-
-
-          echo "=== Reports directory contents ==="
-          ls -R reports/
+      - name: Run OWASP Dependency-Check
+        uses: dependency-check/Dependency-Check_Action@main
+        with:
+          project: "Demo-doctyler"
+          path: "."
+          format: "JSON"
+          out: "reports"
           
       - name: Upload Dependency Check Report
         uses: actions/upload-artifact@v4
         with:
           name: dependency-check-report
-          path: reports/
+          path: reports
