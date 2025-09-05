@@ -58,7 +58,6 @@ jobs:
             --out reports/ \
             --nvdApiKey 9d415b21-6410-464a-89a8-42ab22731476 \
             --nvdApiDelay 60000 \
-            --cveValidForHours 24 \
             --update
 
 
