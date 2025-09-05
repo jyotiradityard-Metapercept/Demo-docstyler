@@ -35,10 +35,8 @@ jobs:
             echo "NVD_API_KEY is set (hidden)"
           fi
       - name: Run Dependency Check (try API, fallback to noupdate)
-        env:
-          NVD_API_KEY: ${{ secrets.NVD_API_KEY }}
         run: |
-          ./dependency-check/bin/dependency-check.sh \
+          $HOME/dependency-check/dependency-check/bin/dependency-check.sh \
             --project "Demo-docstyler" \
             --scan . \
             --format "HTML" \
