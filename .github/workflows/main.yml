@@ -43,7 +43,7 @@ jobs:
             --scan . \
             --format "HTML" \
             --out reports/ \
-            --noupdate
+            --update
 
 
           echo "=== Reports directory contents ==="
