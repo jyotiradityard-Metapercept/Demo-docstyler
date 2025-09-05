@@ -41,14 +41,19 @@ jobs:
           NVD_API_KEY: ${{ secrets.NVD_API_KEY }}
         run: |
           ./dependency-check/bin/dependency-check.sh \
-          --project "MyApp" \
-          --scan . \
-          --format "HTML" \
-          --out reports/ \
-          --nvdApiKey "$NVD_API_KEY" \
-          --nvdApiDelay 20000 \
-          --cveValidForHours 720
+            --project "MyApp" \
+            --scan . \
+            --format "HTML" \
+            --out reports/ \
+            --nvdApiKey "$NVD_API_KEY" \
+            --nvdApiDelay 20000 \
+            --cveValidForHours 720
+          ls -lah reports/
 
-          echo "=== Reports directory contents ==="
-          ls -R reports/ || echo "No reports generated"
+      - name: Upload Dependency Check Report
+        uses: actions/upload-artifact@v4
+        with:
+          name: dependency-check-report
+          path: reports/dependency-check-report.html
+
 
