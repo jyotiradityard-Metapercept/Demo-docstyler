@@ -38,14 +38,6 @@ jobs:
         env:
           NVD_API_KEY: ${{ secrets.NVD_API_KEY }}
         run: |
-          mkdir -p reports
-          ./dependency-check/bin/dependency-check.sh \
-            --project "Demo-docstyler" \
-            --scan . \
-            --format "HTML" \
-            --out reports/ \
-            --nvdApiKey "$NVD_API_KEY" \
-            --nvdApiDelay 100000 || \
           ./dependency-check/bin/dependency-check.sh \
             --project "Demo-docstyler" \
             --scan . \
