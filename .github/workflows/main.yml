@@ -40,7 +40,7 @@ jobs:
       - name: Test NVD API
         run: |
           curl -H "Accept: application/json" \
-               -H "apiKey: ${{ secrets.NVD_API_KEY }}" \
+               -H "apiKey: 9d415b21-6410-464a-89a8-42ab22731476" \
                "https://services.nvd.nist.gov/rest/json/cves/2.0?keyword=windows"
 
       - name: Run Dependency Check (try API, fallback to noupdate)
@@ -50,7 +50,7 @@ jobs:
             --scan . \
             --format "HTML" \
             --out reports/ \
-            --nvdApiKey ${{ secrets.NVD_API_KEY }} \
+            --nvdApiKey 9d415b21-6410-464a-89a8-42ab22731476 \
             --nvdApiDelay 60000 \
             --update
 
