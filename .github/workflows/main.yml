@@ -36,6 +36,13 @@ jobs:
           else
             echo "NVD_API_KEY is set (hidden)"
           fi
+
+      - name: Test NVD API
+        run: |
+          curl -H "Accept: application/json" \
+               -H "apiKey: ${{ secrets.NVD_API_KEY }}" \
+               "https://services.nvd.nist.gov/rest/json/cves/2.0?keyword=windows"
+
       - name: Run Dependency Check (try API, fallback to noupdate)
         run: |
           $HOME/dependency-check/bin/dependency-check.sh \
