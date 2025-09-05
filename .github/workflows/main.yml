@@ -34,20 +34,25 @@ jobs:
           else
             echo "NVD_API_KEY is set (hidden)"
           fi
-      - name: Run Dependency Check (with retries)
+      - name: Run Dependency Check (try API, fallback to noupdate)
         env:
           NVD_API_KEY: ${{ secrets.NVD_API_KEY }}
         run: |
-          for i in 1 2 3; do
-            echo "Attempt $i"
-            ./dependency-check/bin/dependency-check.sh \
-              --project "MyApp" \
-              --scan . \
-              --format "HTML" \
-              --out reports/ \
-              --nvdApiKey "$NVD_API_KEY" \
-              --nvdApiDelay 60000 && break || sleep 30
-          done
+          mkdir -p reports
+          ./dependency-check/bin/dependency-check.sh \
+            --project "MyApp" \
+            --scan . \
+            --format "HTML" \
+            --out reports/ \
+            --nvdApiKey "$NVD_API_KEY" \
+            --nvdApiDelay 100000 || \
+          ./dependency-check/bin/dependency-check.sh \
+            --project "MyApp" \
+            --scan . \
+            --format "HTML" \
+            --out reports/ \
+            --noupdate
+
 
           echo "=== Reports directory contents ==="
           ls -R reports/
