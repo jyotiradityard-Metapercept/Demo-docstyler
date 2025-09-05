@@ -39,10 +39,12 @@ jobs:
       - name: Run Dependency Check (try API, fallback to noupdate)
         run: |
           $HOME/dependency-check/bin/dependency-check.sh \
-            --project "Demo-docstyler" \
+            --project "${{ github.event.repository.name }}" \
             --scan . \
             --format "HTML" \
             --out reports/ \
+            --nvdApiKey ${{ secrets.NVD_API_KEY }} \
+            --nvdApiDelay 60000 \
             --update
 
 
