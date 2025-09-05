@@ -21,11 +21,13 @@ jobs:
           distribution: temurin
           java-version: '17'
 
-      - name: Download OWASP Dependency Check
+      - name: Download Dependency-Check
         run: |
-          curl -L https://github.com/jeremylong/DependencyCheck/releases/download/v9.0.9/dependency-check-9.0.9-release.zip -o dependency-check.zip
-          unzip dependency-check.zip -d dependency-check
-          chmod +x dependency-check/bin/dependency-check.sh
+          wget https://github.com/jeremylong/DependencyCheck/releases/download/v9.1.0/dependency-check-9.1.0-release.zip
+          unzip dependency-check-9.1.0-release.zip -d $HOME
+          mv $HOME/dependency-check-9.1.0 $HOME/dependency-check
+          chmod +x $HOME/dependency-check/bin/dependency-check.sh
+
       - name: Debug NVD API Key
         run: |
           if [ -z "${{ secrets.NVD_API_KEY }}" ]; then
@@ -36,7 +38,7 @@ jobs:
           fi
       - name: Run Dependency Check (try API, fallback to noupdate)
         run: |
-          $HOME/dependency-check/dependency-check/bin/dependency-check.sh \
+          $HOME/dependency-check/bin/dependency-check.sh \
             --project "Demo-docstyler" \
             --scan . \
             --format "HTML" \
