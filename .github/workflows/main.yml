@@ -41,7 +41,7 @@ jobs:
         run: |
           curl -H "Accept: application/json" \
                -H "apiKey: 9d415b21-6410-464a-89a8-42ab22731476" \
-               "https://services.nvd.nist.gov/rest/json/cves/2.0?keyword=windows"
+               "https://services.nvd.nist.gov/rest/json/cves/2.0?cpeName=cpe:2.3:o:microsoft:windows_10:1607:*:*:*:*:*:*:*" | jq .
 
       - name: Run Dependency Check (try API, fallback to noupdate)
         run: |
