@@ -57,7 +57,7 @@ jobs:
             --format "HTML" \
             --out reports/ \
             --nvdApiKey 9d415b21-6410-464a-89a8-42ab22731476 \
-            --nvdApiDelay 60000 \
+            --nvdApiDelay 6000 \
             --update
 
 
