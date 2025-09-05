@@ -40,14 +40,14 @@ jobs:
         run: |
           mkdir -p reports
           ./dependency-check/bin/dependency-check.sh \
-            --project "MyApp" \
+            --project "Demo-docstyler" \
             --scan . \
             --format "HTML" \
             --out reports/ \
             --nvdApiKey "$NVD_API_KEY" \
             --nvdApiDelay 100000 || \
           ./dependency-check/bin/dependency-check.sh \
-            --project "MyApp" \
+            --project "Demo-docstyler" \
             --scan . \
             --format "HTML" \
             --out reports/ \
