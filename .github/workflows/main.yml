@@ -27,6 +27,12 @@ jobs:
           unzip dependency-check-9.1.0-release.zip -d $HOME
           chmod +x $HOME/dependency-check/bin/dependency-check.sh
 
+      - name: Cache Dependency-Check data
+        uses: actions/cache@v3
+        with:
+          path: ~/.dependency-check
+          key: ${{ runner.os }}-dependency-check
+
 
       - name: Debug NVD API Key
         run: |
