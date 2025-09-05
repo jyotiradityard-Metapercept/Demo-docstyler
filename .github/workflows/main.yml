@@ -15,48 +15,15 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Set up Java
-        uses: actions/setup-java@v4
-        with:
-          distribution: temurin
-          java-version: '17'
-
-      - name: Download Dependency-Check
-        run: |
-          wget https://github.com/jeremylong/DependencyCheck/releases/download/v9.1.0/dependency-check-9.1.0-release.zip
-          unzip dependency-check-9.1.0-release.zip -d $HOME
-          chmod +x $HOME/dependency-check/bin/dependency-check.sh
-
-      - name: Cache Dependency-Check data
-        uses: actions/cache@v3
-        with:
-          path: ~/.dependency-check
-          key: ${{ runner.os }}-dependency-check
-
-
-      - name: Debug NVD API Key
-        run: |
-          if [ -z "${{ secrets.NVD_API_KEY }}" ]; then
-            echo "NVD_API_KEY is missing or empty!"
-            exit 1
-          else
-            echo "NVD_API_KEY is set (hidden)"
-          fi
-
-      - name: Test NVD API
-        run: |
-          curl -H "Accept: application/json" \
-               -H "apiKey: 9d415b21-6410-464a-89a8-42ab22731476" \
-               "https://services.nvd.nist.gov/rest/json/cves/2.0?cpeName=cpe:2.3:o:microsoft:windows_10:1607:*:*:*:*:*:*:*" | jq .
-
       - name: Run OWASP Dependency-Check
         uses: dependency-check/Dependency-Check_Action@main
         with:
           project: "Demo-doctyler"
           path: "."
-          format: "JSON"
+          format: "ALL"
           out: "reports"
-          
+          arguments: "--nvdApiKey ${{ secrets.NVD_API_KEY }} --nvdApiDelay 6000"
+
       - name: Upload Dependency Check Report
         uses: actions/upload-artifact@v4
         with:
