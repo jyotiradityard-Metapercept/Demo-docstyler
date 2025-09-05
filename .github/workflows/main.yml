@@ -36,17 +36,19 @@ jobs:
             echo "NVD_API_KEY is set (hidden)"
           fi
 
-            - name: Run Dependency Check
+      - name: Run Dependency Check
         env:
           NVD_API_KEY: ${{ secrets.NVD_API_KEY }}
         run: |
           ./dependency-check/bin/dependency-check.sh \
-            --project "MyApp" \
-            --scan . \
-            --format "HTML" \
-            --out reports/ \
-            --nvdApiKey "$NVD_API_KEY" \
-            --nvdApiDelay 20000 \
-            --cveValidForHours 720
+          --project "MyApp" \
+          --scan . \
+          --format "HTML" \
+          --out reports/ \
+          --nvdApiKey "$NVD_API_KEY" \
+          --nvdApiDelay 20000 \
+          --cveValidForHours 720
+
           echo "=== Reports directory contents ==="
-          ls -R reports/
+          ls -R reports/ || echo "No reports generated"
+
