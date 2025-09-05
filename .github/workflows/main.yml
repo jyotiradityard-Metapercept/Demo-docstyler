@@ -48,11 +48,13 @@ jobs:
               --nvdApiKey "$NVD_API_KEY" \
               --nvdApiDelay 20000 \
               --cveValidForHours 720 && break || sleep 30
-            echo "=== Reports directory contents ==="
-          ls -R reports/
           done
+
+          echo "=== Reports directory contents ==="
+          ls -R reports/
+          
       - name: Upload Dependency Check Report
         uses: actions/upload-artifact@v4
         with:
           name: dependency-check-report
-          path: reports/dependency-check-report.html
+          path: reports/
