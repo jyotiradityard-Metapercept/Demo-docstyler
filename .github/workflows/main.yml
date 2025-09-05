@@ -36,24 +36,17 @@ jobs:
             echo "NVD_API_KEY is set (hidden)"
           fi
 
-      - name: Run Dependency Check (with retries)
+            - name: Run Dependency Check
         env:
           NVD_API_KEY: ${{ secrets.NVD_API_KEY }}
         run: |
-          for i in 1 2 3; do
-            echo "Attempt $i"
-            ./dependency-check/bin/dependency-check.sh \
-              --project "MyApp" \
-              --scan . \
-              --format "HTML" \
-              --out reports/ \
-              --nvdApiKey "$NVD_API_KEY" \
-              --nvdApiDelay 20000 \
-              --cveValidForHours 720 && break || sleep 30
-          done
-
-      - name: Upload Dependency Check Report
-        uses: actions/upload-artifact@v4
-        with:
-          name: dependency-check-report
-          path: reports/dependency-check-report.html
+          ./dependency-check/bin/dependency-check.sh \
+            --project "MyApp" \
+            --scan . \
+            --format "HTML" \
+            --out reports/ \
+            --nvdApiKey "$NVD_API_KEY" \
+            --nvdApiDelay 20000 \
+            --cveValidForHours 720
+          echo "=== Reports directory contents ==="
+          ls -R reports/
