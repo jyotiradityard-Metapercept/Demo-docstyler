@@ -52,8 +52,8 @@ jobs:
      
       - name: Deploy Code to remote server
         env:
-          SSH_PASSWORD: ${{ secrets.SSH_PASSWORD_TEST }}
-          SSH_USERNAME: ${{ secrets.SSH_USERNAME_TEST }}
-          SSH_HOST: ${{ secrets.SSH_HOST_TEST }}
+          SSH_PASSWORD: ${{ secrets.SSH_PASSWORD_DEMO }}
+          SSH_USERNAME: ${{ secrets.SSH_USERNAME_DEMO }}
+          SSH_HOST: ${{ secrets.SSH_HOST_DEMO }}
         run: |
           sshpass -p "$SSH_PASSWORD" scp -o StrictHostKeyChecking=no -r $GITHUB_WORKSPACE/* $SSH_USERNAME@$SSH_HOST:/home/met-r-testmanagerdocxtodita/htdocs/testmanagerdocxtodita.met-r.io/
