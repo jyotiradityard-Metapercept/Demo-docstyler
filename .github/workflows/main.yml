@@ -56,4 +56,4 @@ jobs:
           SSH_USERNAME: ${{ secrets.SSH_USERNAME_DEMO }}
           SSH_HOST: ${{ secrets.SSH_HOST_DEMO }}
         run: |
-          sshpass -p "$SSH_PASSWORD" scp -o StrictHostKeyChecking=no -r $GITHUB_WORKSPACE/* $SSH_USERNAME@$SSH_HOST:/home/met-r-testmanagerdocxtodita/htdocs/testmanagerdocxtodita.met-r.io/
+          sshpass -p "$SSH_PASSWORD" -o StrictHostKeyChecking=no scp -r $GITHUB_WORKSPACE/* $SSH_USERNAME@$SSH_HOST:/home/met-r-testmanagerdocxtodita/htdocs/testmanagerdocxtodita.met-r.io/
