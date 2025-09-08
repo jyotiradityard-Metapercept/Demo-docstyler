@@ -14,6 +14,12 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        
+      - name: Create .env file
+        env:
+          ENV_CONTENT: ${{ secrets.NVD_API_KEY }}
+        run: |
+          echo "ENV_CONTENT" > .env
 
       - name: Run OWASP Dependency-Check
         uses: dependency-check/Dependency-Check_Action@main
@@ -29,3 +35,25 @@ jobs:
         with:
           name: dependency-check-report
           path: reports
+
+      - name: Install SSHPASS
+        run: |
+          sudo apt-get update
+          sudo apt-get install sshpass -y
+
+      - name: Remove existing files from the server
+        env:
+          SSH_PASSWORD: ${{ secrets.SSH_PASSWORD_DEMO }}
+          SSH_USERNAME: ${{ secrets.SSH_USERNAME_DEMO }}
+          SSH_HOST: ${{ secrets.SSH_HOST_DEMO }}
+        run: |
+          ssh -p "$SSH_PASSWORD" -o scp strictHostKeyChecking=no SSH_USERNAME@SSH_HOST
+          rm -rf /home/met-r-testmanagerdocxtodita/htdocs/testmanagerdocxtodita.met-r.io/*
+     
+      - name: Deploy Code to remote server
+        env:
+          SSH_PASSWORD: ${{ secrets.SSH_PASSWORD_TEST }}
+          SSH_USERNAME: ${{ secrets.SSH_USERNAME_TEST }}
+          SSH_HOST: ${{ secrets.SSH_HOST_TEST }}
+        run: |
+          sshpass -p "$SSH_PASSWORD" scp -o StrictHostKeyChecking=no -r $GITHUB_WORKSPACE/* $SSH_USERNAME@$SSH_HOST:/home/met-r-testmanagerdocxtodita/htdocs/testmanagerdocxtodita.met-r.io/
