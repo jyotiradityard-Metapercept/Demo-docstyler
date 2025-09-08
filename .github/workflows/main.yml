@@ -47,7 +47,7 @@ jobs:
           SSH_USERNAME: ${{ secrets.SSH_USERNAME_DEMO }}
           SSH_HOST: ${{ secrets.SSH_HOST_DEMO }}
         run: |
-          ssh -p "$SSH_PASSWORD" -o scp strictHostKeyChecking=no SSH_USERNAME@SSH_HOST
+          ssh -p "$SSH_PASSWORD" -o scp strictHostKeyChecking=no $SSH_USERNAME@$SSH_HOST
           rm -rf /home/met-r-testmanagerdocxtodita/htdocs/testmanagerdocxtodita.met-r.io/*
      
       - name: Deploy Code to remote server
